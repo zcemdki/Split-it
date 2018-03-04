@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.File;
@@ -6,7 +5,20 @@ import java.io.FileWriter;
 
 public class Selections 
 {
-    public static final String SEPARATION = "**************************************************************";
+    int NumberOfMembers = 0;
+    String[] members;
+  
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+  
+    public static final String SEPARATION = "********";
       
     public static void main(String[] args)
     {
@@ -24,7 +36,7 @@ public class Selections
          return optionString.toUpperCase().charAt(0);
     }
   
-    public static void createProject() 
+    public void createProject() 
     {
         Scanner scan = new Scanner(System.in);
         System.out.println(SEPARATION);
@@ -32,6 +44,7 @@ public class Selections
         //Asks for the name of the project//
         System.out.print("\nEnter the project name: ");
         String projectName = scan.nextLine();
+        //Project newProject = new Project(projectName);
      
         //Asks for the number of team members and keeps this as int "n"//
         System.out.print("Enter the number of team members: ");
@@ -42,44 +55,56 @@ public class Selections
             System.out.print("Please enter an integer value: ");
         }
       
-        int memberNo = scan.nextInt(); //Ensures you take an integer//
+        int NumberOfMembers = scan.nextInt(); //Ensures you take an integer//
+        //newProject.setNoTeamMembers(NumberOfMembers);
         scan.nextLine();
-    
-        while ( memberNo <= 1 )
+        
+           
+        
+        while ( NumberOfMembers <= 1 )
         {
             System.out.print("ERROR! Please enter a value above 1: ");  
-            memberNo = scan.nextInt();
-        }
-      
-        String [] names = new String[memberNo];
+            NumberOfMembers = scan.nextInt();
+            //newProject.setNoTeamMembers(NumberOfMembers);
+            scan.nextLine();
+        } 
+        
+        members = new String[NumberOfMembers];    
   
         //Asks for the names of each member and stores the names in an array//
-        for (int i = 0; i < names.length; i++)
+               
+        for (int i = 0; i < NumberOfMembers; i++)
+        
         {
             System.out.print("\tEnter the name of team member " + (i+1) + ": ");
-            names[i] = scan.nextLine();
+            members[i] = scan.nextLine();
+            //newProject.setMemberName(newMember);
         }
+            
+
+        
+        /*
+        System.out.print("This members name is: " + ANSI_RED + newMember.getName() + ANSI_RESET + ". What score will you give them? ");
       
-        System.out.println();
+        int score = scan.nextInt();
+        newMember.setScore(score);
+      
+        System.out.println("You gave " + ANSI_RED + newMember.getName() + ANSI_RESET + " a score of: " + ANSI_CYAN + newMember.getScore() + ANSI_RESET + "!" );
+       
+        */
 
         //EXTRA: sequentially print the names in a sentence//
-        System.out.print("Welcome ");
-      
-        for (String i : names)
-        { 
-            System.out.print(i);
-            System.out.print(", ");
-        }
-        System.out.println("Good luck on your project!");
+       
         try
         {
             PrintWriter pr = new PrintWriter(new FileWriter("Team & Member Names.csv",true));    
             pr.print(projectName + ",");
+            pr.print(NumberOfMembers + ",");
             
             //Prints all members into file//
-            for (int i=0; i<memberNo ; i++)
+            for (int i=0; i<NumberOfMembers ; i++)
             {
-                pr.print(names[i] + ",");
+                pr.print(members[i] + ",");
             }
             pr.print("\n");
             pr.close();
@@ -92,20 +117,44 @@ public class Selections
             }
         scan.close();
         
-      
+          
         //Return back to main menu//
+        System.out.println();
+        System.out.print("Enter any key and press enter to go back to the menu: ");
+        char back = scan.next().charAt(0);
+        
+        if (back != 00) 
+        { 
         MainMenu.printMenu();
         MainMenu.selection();
+        }
+      
+      System.out.println();
     }
   
     public static void votes() 
     {
-        //Returns back to the Main Menu//
-        System.out.println(SEPARATION + "\n");
-        System.out.print("Enter the project name: ");
+        int Total_Points = NumberOfMembers * (NumberOfMembers/* - 1*/);
+        int[] membersPointsList = new int[Total_Points];
+      
+        System.out.println("---------------------------------------------------------");
+        Scanner scan = new Scanner(System.in);
+        System.out.print("\tEnter the project name: ");      
+        String ProjectName = scan.next();
         
-        //Enter project name//
-        System.out.println("There are " + "the team name" + "team members.");
+        System.out.println("There are " + NumberOfMembers + " team members.");
+        
+        for (int members_index1 = 0 ; members_index1 < NumberOfMembers ; members_index1++)
+        {
+          System.out.println("\nEnter " + members[members_index1] + "'s votes, points must add upto 100:\n");
+          for (int members_index2 = 1 ; members_index2 < NumberOfMembers ; members_index2++)
+          {
+            int Points_Order = (members_index1 * NumberOfMembers) + members_index2;
+            System.out.println("\tEnter " + members[members_index1] + "'s points for " + members[members_index2] + ": ");
+            membersPointsList[Points_Order] = scan.nextInt();
+          }
+        }
+        System.out.println("Press any key followed by <Enter> to return to the main menu: ");
     }
   
     public static void showProject() 
@@ -122,5 +171,3 @@ public class Selections
         System.out.println(SEPARATION + "\n\n\tThank you for using Split-it. Hope to see you soon.\n");
     }
 }
-  
-  
